@@ -1,0 +1,48 @@
+
+/* define font families */
+@font-face {
+    font-family: 'SourceSans3-Light';
+    src: url(../fonts/SourceSans3-Light.ttf);
+}
+
+@font-face {
+    font-family: 'SourceSans3-ExtraLight';
+    src: url(../fonts/SourceSans3-ExtraLight.ttf);
+}
+
+#hero-img-container {
+    min-height: 20vw;
+    height: 30vw;
+    overflow: hidden;
+}
+
+#hero-img {
+    background-image: url(../img/home-hero-13.jpg);
+    height: 31vw;
+    background-size: cover; 
+    background-position: center;
+    filter: blur(4px) brightness(60%);
+    transform: scale(1.1);
+}
+
+#mission-statement {
+    font-family: 'SourceSans3-Light', sans-serif;
+    font-size: 1.25rem;
+}
+
+#map {
+    height: 30rem;
+}
+
+/* .card-img {
+    width: 100%;
+    height: 100%;
+}
+
+.card-text {
+    overflow: hidden;   
+    white-space: nowrap;
+    text-overflow: ellipsis;
+} */
+
+

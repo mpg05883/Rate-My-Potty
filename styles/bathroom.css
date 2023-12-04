@@ -1,0 +1,28 @@
+/*
+color palette:
+dark teal - #1b6f73
+mid teal - #015C63
+light teal - #017075
+dark salmon - #F48D79
+mid salmon - #FDA898
+light salmon - #FFC0B4
+*/
+
+.carousel-img-container {
+    height: 25rem;
+    overflow: hidden;
+}
+
+.carousel-img {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}
+
+.day-of-the-week {
+    font-weight: 600;
+    padding-right: 1rem;
+}
+
+
+
