@@ -50,15 +50,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- meta data -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- link bootstrap above stylesheet -->
+    
+    <!-- self-made stylesheets -->
+    <link rel="stylesheet" href="../styles/bathroom.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../styles/style.css?v=<?php echo time(); ?>">
+
+    <!-- bootstrap css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="../styles/bathroom.css">
-    <link rel="stylesheet" href="../styles/style.css">
+
+    <!-- animate css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- awesome font-->
     <script src="https://kit.fontawesome.com/8cd52aea40.js" crossorigin="anonymous"></script>
-    <title>Rate My Potty</title>
+
+    <!-- mapbox -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+    
+    <!-- title -->
+    <!-- echo building abbrevation in title -->
+    <title>Rate My Potty | </title>
+    
+    <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="../img/logo.png">
 </head>
 <body>
@@ -138,7 +155,7 @@
                 <!-- container for hours and amenities -->
                 <div class="py-4 row animate__animated animate__fadeInUp animate__slow" id="hours-and-amenities-container">
                     <!-- hours -->
-                    <div class=" col-sm-12 col-md-6 col-lg-3" id="hours-container">
+                    <div class="col-sm-12 col-md-6 col-lg-3" id="hours-container">
                         <h2 id="hours-header">Hours</h2>
                         <table class="py-4" id="hours-table">
                             <tr id="monday-row">

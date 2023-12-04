@@ -5,13 +5,13 @@
 }
 
 @font-face {
-    font-family: 'SourceSans3-SemiBold';
-    src: url(../fonts/SourceSans3-SemiBold.ttf);
+    font-family: 'SourceSans3-Medium';
+    src: url(../fonts/SourceSans3-Medium.ttf);
 }
 
 @font-face {
-    font-family: 'SourceSans3-Medium';
-    src: url(../fonts/SourceSans3-Medium.ttf);
+    font-family: 'SourceSans3-SemiBold';
+    src: url(../fonts/SourceSans3-SemiBold.ttf);
 }
 
 @font-face {
@@ -49,6 +49,7 @@ header, footer {
 
 .nav-link {
     color: white;
+    letter-spacing: 0.5px;
 }
 
 .nav-link:hover {
@@ -81,10 +82,16 @@ i, .checked {
 
 #review-btn {
     background-color: #FDA898;
+    padding: 0.5rem;
 }
 
 #review-btn:hover {
     background-color: #F48D79;
+}
+
+#review-btn-text {
+    font-family: 'SourceSans3-Regular', sans-serif;
+    font-size: 1rem;
 }
 
 /* different color borders for debugging */

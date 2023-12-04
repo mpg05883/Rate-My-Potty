@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- meta data -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- link bootstrap above stylesheet -->
+    
+    <!-- self-made stylesheets -->
+    <link rel="stylesheet" href="../styles/upload_form.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../styles/style.css?v=<?php echo time(); ?>">
+
+    <!-- bootstrap css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="../styles/upload_form.css">
-    <link rel="stylesheet" href="../styles/style.css">
+
+    <!-- animate css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- awesome font-->
     <script src="https://kit.fontawesome.com/8cd52aea40.js" crossorigin="anonymous"></script>
-    <title>Rate My Potty</title>
+
+    <!-- mapbox -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+    
+    <!-- title -->
+    <title>Rate My Potty | Review Form</title>
+    
+    <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="../img/logo.png">
 </head>
 <body>
@@ -73,8 +89,8 @@
                     </div>  
 
                     <!-- submit btn -->
-                    <button href="../pages/upload_form.html" type="button" class="my-4 btn fw-medium animate__animated animate__fadeInUp animate__slower" id="submit-btn">
-                        Submit
+                    <button href="../pages/upload_form.html" type="button" class="rounded-4 btn fw-medium animate__animated animate__fadeInUp animate__slower" id="submit-btn">
+                        <span id="submit-btn-text">Submit</span>
                     </button>
                 </form>
             </div>

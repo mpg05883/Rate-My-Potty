@@ -25,9 +25,18 @@
     transform: scale(1.1);
 }
 
+#mission-header {
+    font-size: 4rem;
+}
+
 #mission-statement {
     font-family: 'SourceSans3-Light', sans-serif;
     font-size: 1.25rem;
+}
+
+.mission-item-text {
+    font-family: 'SourceSans3-Light', sans-serif;
+    font-size: 1.1rem;
 }
 
 #map {

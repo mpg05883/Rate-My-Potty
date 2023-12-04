@@ -1,7 +1,17 @@
+@font-face {
+    font-family: 'SourceSans3-Regular';
+    src: url(../fonts/SourceSans3-Regular.ttf);
+}
+
 #submit-btn {
     background-color: #FDA898;
 }
 
 #submit-btn:hover {
     background-color: #F48D79;
+}
+
+#submit-btn-text {
+    font-family: 'SourceSans3-Regular', sans-serif;
+    font-size: 1rem;
 }
