@@ -29,11 +29,30 @@
         - close db connection
         - exit program
     */
+
     if (!$results_marker_info) {
 		echo $mysqli->error;
 		$mysqli->close();
 		exit();
 	}
+
+    // while we can read rows from db:
+    while ($row = $results_marker_info->fetch_assoc()) {        
+        // init associative array where each index holds an array of [building_id, abbreviation, lng, lat]
+        $marker_info[] = [
+            'building_id' => $row['building_id'],
+            'abbreviation' => $row['abbreviation'],
+            'longitude' => number_format($row['longitude'], 7, '.', ''),
+            'latitude' => number_format($row['latitude'], 7, '.', ''),
+        ]; 
+    }
+
+    // echo '<pre>', var_dump($marker_info), '</pre>';
+
+    // format marker info as JSON
+    $json_marker_info = json_encode($marker_info);
+
+    // echo '<pre>', var_dump($json_marker_info), '</pre>';
 
     // close db connection
 	$mysqli->close();
@@ -139,35 +158,70 @@
                         style: 'mapbox://styles/mapbox/streets-v12', // style
                         center: [-118.28567677747262, 34.02181012760304], // starting position [lng, lat]
                         zoom: 15.9 // starting zoom
-                    });
+                    });     
 
                     // add search bar to map
                     map.addControl(
                         new MapboxGeocoder({
                             accessToken: mapboxgl.accessToken,
                             mapboxgl: mapboxgl
-                        })
+                        })                          
                     );
-                    // create the popup
+
+                    // init JSON object using data read in from db
+                    const markerData = <?php echo $json_marker_info ?>;
+                    
+                    // for each building:
+                    for (let i = 0; i < Object.keys(markerData).length; i++) {
+                        // save index
+                        let index = i;
+
+                        // save building id, abbreviation, lng, and lat
+                        let building_id = markerData[i.toString()]['building_id'];
+                        let abbreviation = markerData[index.toString()]['abbreviation'];
+                        let longitude = markerData[index.toString()]['longitude'];
+                        let latitude = markerData[index.toString()]['latitude'];
+
+                        console.log(longitude);
+
+                        // init new popup
+                        const popup = new mapboxgl.Popup({ offset: 25 }).setText(abbreviation);
+
+                        // create DOM element for the marker
+                        const el = document.createElement('div');
+                        el.id = building_id;
+
+                        // create default marker and add it to the map.
+                        const marker1 = new mapboxgl.Marker({color: '#017075', scale: 0.75})
+                            .setLngLat([parseFloat(longitude), parseFloat(latitude)])
+                            .setPopup(popup) // sets a popup on this marker
+                            .addTo(map);
+                            
+                    }
+
+
+
+
+                    // create the popup 
                     // on each pop up, include
                     /*
                     building abbreviation
                     rating
                     anchor tag to bathrom.php
                     */
-                    const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-                    'Construction on the Washington Monument began in 1848.'
-                    );
+                    // const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+                    // 'Construction on the Washington Monument began in 1848.'
+                    // );
                     
-                    // create DOM element for the marker
-                    const el = document.createElement('div');
-                    el.id = 'marker';s
+                    // // create DOM element for the marker
+                    // const el = document.createElement('div');
+                    // el.id = 'marker';
 
-                    // Create a default Marker and add it to the map.
-                    const marker1 = new mapboxgl.Marker({color: '#017075', scale: 0.6})
-                        .setLngLat([-118.28952532067683, 34.019544759288905])
-                        .setPopup(popup) // sets a popup on this marker
-                        .addTo(map);
+                    // // Create a default Marker and add it to the map.
+                    // const marker1 = new mapboxgl.Marker({color: '#017075', scale: 0.6})
+                    //     .setLngLat([-118.28952532067683, 34.019544759288905])
+                    //     .setPopup(popup) // sets a popup on this marker
+                    //     .addTo(map);
                 </script>
                 </div>
             </div>
