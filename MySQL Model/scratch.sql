@@ -1,4 +1,3 @@
-SELECT filepath
+SELECT review_id, first_name, last_name, rating, comments
 FROM reviews
-WHERE filepath IS NOT NULL 
-AND building_id = 4;
+WHERE building_id = 4;

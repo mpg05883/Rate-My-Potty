@@ -21,36 +21,36 @@
     $building_id = $_GET['building_id'];
 
     //* define function to print # of starts
-    function printStars($rating) {
-        if ($rating == 0) {
+    function printStars($rating) {    
+        if (round($rating) == 0) {
             echo "<span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>";
         }
-        else if ($rating == 1) {
+        else if (round($rating) == 1) {
             echo "<span class=\"fa fa-star checked\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>";
         }
-        else if ($rating == 2) {
+        else if (round($rating)== 2) {
             echo "<span class=\"fa fa-star checked\"></span>
             <span class=\"fa fa-star checked\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>";
         }
-        else if ($rating == 3) {
+        else if (round($rating) == 3) {
             echo "<span class=\"fa fa-star checked\"></span>
             <span class=\"fa fa-star checked\"></span>
             <span class=\"fa fa-star checked\"></span>
             <span class=\"fa fa-star\"></span>
             <span class=\"fa fa-star\"></span>";
         }
-        else if ($rating == 4) {
+        else if (round($rating) == 4) {
             echo "<span class=\"fa fa-star checked\"></span>
             <span class=\"fa fa-star checked\"></span>
             <span class=\"fa fa-star checked\"></span>
@@ -213,7 +213,7 @@
 
     //* get reviews
     // SQL cmd to get reviews for this build
-    $sql_reviews = "SELECT first_name, last_name, rating, comments
+    $sql_reviews = "SELECT review_id, first_name, last_name, rating, comments
                     FROM reviews
                     WHERE building_id = " . $building_id . ";";
 
@@ -231,6 +231,9 @@
         // exit program
         exit();
     }
+
+    // save all reviews 
+    $reviews = $results_reviews->fetch_all();
 
     // count # of reviews for this building
     $sql_number_of_reviews = "SELECT COUNT(*) as count
@@ -257,8 +260,6 @@
 
     // save # of reviews from associative array
     $number_of_reviews = $row_number_of_reviews['count'];
-
-    // echo $number_of_reviews;
         
     // sum all ratings for this building
     $sql_sum_of_reviews = "SELECT SUM(rating) as sum
@@ -287,11 +288,12 @@
     $sum_of_reviews = $row_sum_of_reviews ['sum'];
 
     // calculate average rating
-    $average_rating = $sum_of_reviews / $number_of_reviews;
-
-    // while ($row_filepaths = $results_filepaths->fetch_assoc()) {
-    //     echo $row_filepaths["filepath"];
-    // }
+    if (count($reviews) == 0) {
+        $average_rating = 0;
+    }
+    else {
+        $average_rating = $sum_of_reviews / $number_of_reviews;
+    }
 
     // close db connection
     $mysqli->close();
@@ -380,11 +382,7 @@
         
                     <!-- rating -->
                     <div class="" id="rating-container">
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star"></span>
-                        <span class="fa fa-star"></span>
+                        <?php echo printStars($average_rating); ?>
                         <span class="ps-2 fw-medium fs-5"><?php echo $average_rating ?></span>
                         <span class="ps-1 fw-medium fs-5 text-nowrap"><?php echo " (" . $number_of_reviews . " reviews)"?></span>
                     </div>
@@ -553,21 +551,23 @@
                 <div class="row pt-2 pt-4-lg animate__animated animate__fadeInUp animate__slow" id="reviews-container">
                     <!-- reviews header -->
                     <h2 class="" id="reviews-header">Reviews</h2>
-
-                    <!-- review-container -->
-                    <?php while ($row = $results_reviews->fetch_assoc()) : ?>
-                    <div class="bg-light my-3 p-4 rounded-5 review-container">
-                        <div class="p-3 user-info-container">
-                            <i class="fa-solid fa-user fa-2xl"></i>
-                            <span class="px-4 fw-semibold fs-5"><?php echo $row['first_name'] . " " . $row['last_name']; ?></span>
-                        </div>
-                        <div class="py-2 d-block" id="rating-container">
-                            <?php printStars($row['rating']); ?>
-                        </div>
-                        <p class="user-review"><?php echo $row['comments']; ?></p>
-                    </div>
-                    <?php endwhile; ?>
-
+                        <?php if (sizeof($reviews) == 0) : ?>
+                            <p>No reviews</p>
+                        <?php else : ?>
+                            <!-- review-container -->
+                            <?php foreach ($reviews as $key => $val) : ?>
+                            <div class="bg-light my-3 p-4 rounded-5 review-container">
+                                <div class="p-3 user-info-container">
+                                    <i class="fa-solid fa-user fa-2xl"></i>
+                                    <span class="px-4 fw-semibold fs-5"><?php echo $val[1] . " " . $val[2]; ?></span>
+                                </div>
+                                <div class="py-2 d-block" id="rating-container">
+                                    <?php printStars($val[3]); ?>
+                                </div>
+                                <p class="user-review"><?php echo $val[4]; ?></p>
+                            </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                 </div>
             </div>
         </div>
