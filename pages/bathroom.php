@@ -67,10 +67,11 @@
     }
 
     //* get filepaths to photos for this building
-    // SQL cmd to get filepaths for this building
+    // SQL cmd to get non null filepaths for this building
     $sql_filepaths = "SELECT filepath
                         FROM reviews
-                        WHERE building_id = " . $building_id . ";";
+                        WHERE filepath IS NOT NULL 
+                        AND building_id = " . $building_id . ";";
     
     // query SQL cmd
     $results_filepaths = $mysqli->query($sql_filepaths);
@@ -86,6 +87,9 @@
         // exit program
         exit();
     }
+
+    // store all filepaths in an assoc array
+    $filepaths = $results_filepaths->fetch_all();
 
     //* get building info (name, abbreviation, address, lng, and lat)
     // SQL cmd to get building info for the given building id
@@ -285,6 +289,10 @@
     // calculate average rating
     $average_rating = $sum_of_reviews / $number_of_reviews;
 
+    // while ($row_filepaths = $results_filepaths->fetch_assoc()) {
+    //     echo $row_filepaths["filepath"];
+    // }
+
     // close db connection
     $mysqli->close();
 ?>
@@ -328,38 +336,24 @@
         <div class="bg-light container-fluid" id="carousel-container">
             <div id="carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <?php echo sizeof($results_filepaths->fetch_assoc()); ?>
                     <!-- if there's 0 images, display placeholder -->
-                    <?php if (sizeof($results_filepaths->fetch_assoc()) <= 1) : ?>
+                    <?php if (count($filepaths) == 0) : ?>
                         <!-- item -->
                         <div class="carousel-item active">
                             <div class="carousel-img-container">
                                 <img src="../img/placeholder.webp" class="carousel-img d-block w-100" alt="placeholder">
                             </div>
                         </div>
-                    <?php endif; ?>
-
-                    <!-- 
-                    if count(filepath) for this building id == 0:
-                        display placeholder
-                    else:
-                        $filepath_row = $results_filepaths->fetch_assoc()
-                        display first image
-
-                        while ($filepath_row = $results_filepaths->fetch_assoc()):
-                            display the rest of the images
-                    -->
-
-                    <!-- <?php while ($filepath_row = $results_filepaths->fetch_assoc()) : ?>
-                        <div class="carousel-item active">
-                            <div class="carousel-img-container">
-                                <img src= class="carousel-img d-block w-100" alt="./img/test.jpg">
+                    <!-- else, display all images for this building -->
+                    <?php else : ?>
+                        <?php foreach ($filepaths as $key => $val) : ?>
+                            <div class="carousel-item active">
+                                <div class="carousel-img-container">
+                                    <img src="<?php echo($val[0]); ?>" class="carousel-img d-block w-100" alt="<?php echo($val[0]); ?>">
+                                </div>
                             </div>
-                        </div>
-                    <?php endwhile; ?> -->
-
-                    
-
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>

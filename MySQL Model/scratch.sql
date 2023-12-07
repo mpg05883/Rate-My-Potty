@@ -1,3 +1,4 @@
-SELECT SUM(rating) as sum
+SELECT filepath
 FROM reviews
-WHERE building_id = 1;
+WHERE filepath IS NOT NULL 
+AND building_id = 4;
