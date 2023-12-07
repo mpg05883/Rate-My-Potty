@@ -87,9 +87,6 @@
         exit();
     }
 
-    var_dump($results_filepaths->fetch_assoc());
-
-
     //* get building info (name, abbreviation, address, lng, and lat)
     // SQL cmd to get building info for the given building id
     $sql_building_info = "SELECT name, abbreviation, address, longitude, latitude
@@ -331,6 +328,16 @@
         <div class="bg-light container-fluid" id="carousel-container">
             <div id="carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
+                    <?php echo sizeof($results_filepaths->fetch_assoc()); ?>
+                    <!-- if there's 0 images, display placeholder -->
+                    <?php if (sizeof($results_filepaths->fetch_assoc()) <= 1) : ?>
+                        <!-- item -->
+                        <div class="carousel-item active">
+                            <div class="carousel-img-container">
+                                <img src="../img/placeholder.webp" class="carousel-img d-block w-100" alt="placeholder">
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- 
                     if count(filepath) for this building id == 0:
@@ -351,26 +358,8 @@
                         </div>
                     <?php endwhile; ?> -->
 
-                    <!-- item -->
-                    <div class="carousel-item active">
-                        <div class="carousel-img-container">
-                            <img src="../img/placeholder.webp" class="carousel-img d-block w-100" alt="./img/test.jpg">
-                        </div>
-                    </div>
+                    
 
-                    <!-- item -->
-                    <div class="carousel-item">
-                        <div class="carousel-img-container">
-                            <img src="../img/rth.jpg" class="carousel-img d-block w-100" alt="./img/test.jpg">
-                        </div>
-                    </div>
-
-                    <!-- item -->
-                    <div class="carousel-item">
-                        <div class="carousel-img-container">
-                            <img src="../img/leavey.jpg" class="carousel-img d-block w-100" alt="./img/test.jpg">
-                        </div>
-                    </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
