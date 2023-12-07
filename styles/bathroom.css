@@ -24,5 +24,13 @@ light salmon - #FFC0B4
     padding-right: 1rem;
 }
 
+#map {
+    height: 9rem;
+}
+
+table {
+    margin: 0 auto;
+}
+
 
 

@@ -54,6 +54,16 @@
 
     // echo '<pre>', var_dump($json_marker_info), '</pre>';
 
+    // if building id is null:
+    if (is_null($_GET['building_id'])) {
+        // set building id to 0
+        $building_id = 0;
+    }
+    // else - set building it to $_GET['building_id']
+    else {
+        $building_id = $_GET['building_id'];
+    }
+
     // close db connection
 	$mysqli->close();
 ?>
@@ -131,16 +141,16 @@
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-4 hover-enlarge">
                             <i class="fa-solid fa-map-location-dot fa-2xl"></i>
-                            <p class="p-2 mission-item-text">Search bathrooms by location</p>
+                            <p class="p-2 mission-item-text">Search for bathrooms by location</p>
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-4 hover-enlarge">
                             <i class="fa-solid fa-thumbs-up fa-2xl"></i>
-                            <p class="p-2 mission-item-text">Reviews from real students</p>
+                            <p class="p-2 mission-item-text">Reviews from real USC students</p>
                         </div>
                     </div>
 
                     <!-- review btn -->
-                    <button onclick="location.href = '../pages/upload_form.php'" type="button" class="rounded-4 btn fw-medium animate__animated animate__fadeInUp animate__slower" id="review-btn">
+                    <button onclick="location.href = '../pages/review_form.php?building_id=<?php echo $building_id; ?>'" type="button" class="rounded-4 btn fw-medium animate__animated animate__fadeInUp animate__slower" id="review-btn">
                         <i class="fa-solid fa-pen-to-square fa-sm pe-1" style="color: #000000;"></i>
                         <span id="review-btn-text">Write a review</span>
                     </button>
@@ -148,81 +158,58 @@
 
                 <!-- map container -->
                 <div class="rounded-5 my-4 py-4 animate__animated animate__fadeInUp container-fluid" id="map">
-                <script>
-                    // API token
-                    mapboxgl.accessToken = 'pk.eyJ1IjoibXBnZWUiLCJhIjoiY2xwb3k1ZTFjMHJseDJpcTRiZXFlcGwzaiJ9.xT9UpvZS1bB_T8WmRKS1vQ';
-                    
-                    // init map object
-                    const map = new mapboxgl.Map({
-                        container: 'map', // container's id
-                        style: 'mapbox://styles/mapbox/streets-v12', // style
-                        center: [-118.28567677747262, 34.02181012760304], // starting position [lng, lat]
-                        zoom: 15.9 // starting zoom
-                    });     
+                    <script>
+                        // API token
+                        mapboxgl.accessToken = 'pk.eyJ1IjoibXBnZWUiLCJhIjoiY2xwb3k1ZTFjMHJseDJpcTRiZXFlcGwzaiJ9.xT9UpvZS1bB_T8WmRKS1vQ';
+                        
+                        // init map object
+                        const map = new mapboxgl.Map({
+                            container: 'map', // container's id
+                            style: 'mapbox://styles/mapbox/streets-v12', // style
+                            center: [-118.28567677747262, 34.02181012760304], // starting position [lng, lat]
+                            zoom: 15.9 // starting zoom
+                        });     
 
-                    // add search bar to map
-                    map.addControl(
-                        new MapboxGeocoder({
-                            accessToken: mapboxgl.accessToken,
-                            mapboxgl: mapboxgl
-                        })                          
-                    );
+                        // add search bar to map
+                        map.addControl(
+                            new MapboxGeocoder({
+                                accessToken: mapboxgl.accessToken,
+                                mapboxgl: mapboxgl
+                            })                          
+                        );
 
-                    // init JSON object using data read in from db
-                    const markerData = <?php echo $json_marker_info ?>;
-                    
-                    // for each building:
-                    for (let i = 0; i < Object.keys(markerData).length; i++) {
-                        // save index
-                        let index = i;
+                        // init JSON object using data read in from db
+                        const markerData = <?php echo $json_marker_info ?>;
+                        
+                        // for each building:
+                        for (let i = 0; i < Object.keys(markerData).length; i++) {
+                            // save index
+                            let index = i;
 
-                        // save building id, abbreviation, lng, and lat
-                        let building_id = markerData[i.toString()]['building_id'];
-                        let abbreviation = markerData[index.toString()]['abbreviation'];
-                        let longitude = markerData[index.toString()]['longitude'];
-                        let latitude = markerData[index.toString()]['latitude'];
+                            // save building id, abbreviation, lng, and lat
+                            let building_id = markerData[i.toString()]['building_id'];
+                            let abbreviation = markerData[index.toString()]['abbreviation'];
+                            let longitude = markerData[index.toString()]['longitude'];
+                            let latitude = markerData[index.toString()]['latitude'];
 
-                        console.log(longitude);
+                            console.log(longitude);
 
-                        // init new popup
-                        const popup = new mapboxgl.Popup({ offset: 25 }).setText(abbreviation);
+                            // const bathroomPopUpLink = "<a class=\"dropdown-item fw-medium\" href=\"../pages/bathroom.php?building_id=\<?php echo $row['building_id'] ?>\">\<?php echo $row['abbreviation']; ?> </a>";
+                                        
+                            // init new popup
+                            const popup = new mapboxgl.Popup({ offset: 25 }).setText(abbreviation);
 
-                        // create DOM element for the marker
-                        const el = document.createElement('div');
-                        el.id = building_id;
+                            // create DOM element for the marker
+                            const el = document.createElement('div');
+                            el.id = building_id;
 
-                        // create default marker and add it to the map.
-                        const marker1 = new mapboxgl.Marker({color: '#017075', scale: 0.75})
-                            .setLngLat([parseFloat(longitude), parseFloat(latitude)])
-                            .setPopup(popup) // sets a popup on this marker
-                            .addTo(map);
-                            
-                    }
-
-
-
-
-                    // create the popup 
-                    // on each pop up, include
-                    /*
-                    building abbreviation
-                    rating
-                    anchor tag to bathrom.php
-                    */
-                    // const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-                    // 'Construction on the Washington Monument began in 1848.'
-                    // );
-                    
-                    // // create DOM element for the marker
-                    // const el = document.createElement('div');
-                    // el.id = 'marker';
-
-                    // // Create a default Marker and add it to the map.
-                    // const marker1 = new mapboxgl.Marker({color: '#017075', scale: 0.6})
-                    //     .setLngLat([-118.28952532067683, 34.019544759288905])
-                    //     .setPopup(popup) // sets a popup on this marker
-                    //     .addTo(map);
-                </script>
+                            // create default marker and add it to the map.
+                            const marker1 = new mapboxgl.Marker({color: '#017075', scale: 0.75})
+                                .setLngLat([parseFloat(longitude), parseFloat(latitude)])
+                                .setPopup(popup) // sets a popup on this marker
+                                .addTo(map);                            
+                        }
+                    </script>
                 </div>
             </div>
         </div>
