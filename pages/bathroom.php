@@ -1,7 +1,4 @@
 <?php
-    // // start session
-    // session_start();
-
     // require db credentials
     require "../config/config.php";
 
@@ -23,7 +20,7 @@
     // save building id
     $building_id = $_GET['building_id'];
 
-    // define function to print # of starts
+    //* define function to print # of starts
     function printStars($rating) {
         if ($rating == 0) {
             echo "<span class=\"fa fa-star\"></span>
@@ -69,7 +66,29 @@
         }
     }
 
-    //* 1) get building info (name, abbreviation, address, lng, and lat)
+    //* get filepaths to photos for this building
+    // SQL cmd to get filepaths for this building
+    $sql_filepaths = "SELECT filepath
+                        FROM reviews
+                        WHERE building_id = " . $building_id . ";";
+    
+    // query SQL cmd
+    $results_filepaths = $mysqli->query($sql_filepaths);
+
+    // if there's an error with querying the SQL cmd:
+    if (!$results_filepaths) {
+        // print error
+        echo $mysqli->error;
+
+        // close connection to db
+        $mysqli->close();
+
+        // exit program
+        exit();
+    }
+
+
+    //* get building info (name, abbreviation, address, lng, and lat)
     // SQL cmd to get building info for the given building id
     $sql_building_info = "SELECT name, abbreviation, address, longitude, latitude
                         FROM buildings
@@ -100,7 +119,7 @@
     $longitude = number_format($building_info["longitude"], 7, '.', '');
     $latitude = number_format($building_info["latitude"], 7, '.', '');
 
-    //* 2) get opening and closing hours for each day of the week
+    //* get opening and closing hours for each day of the week
     // SQL cmd to get building hours
     $sql_hours = "SELECT 
                     time_format(mon_open, '%h %i %p') as mon_open,
@@ -154,7 +173,7 @@
     $sun_open = $hours['sun_open'];
     $sun_close = $hours['sun_close'];
 
-    //* 3) get amenities
+    //* get amenities
     // SQL cmd to get amenities
     $sql_amenities = "SELECT *
                     FROM amenities
@@ -189,7 +208,7 @@
     $shower = $amenities['shower'];
     $ply = $amenities['ply'];
 
-    //*4) get reviews
+    //* get reviews
     // SQL cmd to get reviews for this build
     $sql_reviews = "SELECT first_name, last_name, rating, comments
                     FROM reviews
@@ -267,27 +286,6 @@
     // calculate average rating
     $average_rating = $sum_of_reviews / $number_of_reviews;
 
-    //*5) get filepaths to photos for this building
-    // SQL cmd to get filepaths for this building
-    $sql_filepaths = "SELECT filepath
-                        FROM reviews
-                        WHERE building_id = " . $building_id . ";";
-    
-    // query SQL cmd
-    $results_filepaths = $mysqli->query($sql_filepaths);
-
-    // if there's an error with querying the SQL cmd:
-    if (!$results_filepaths) {
-        // print error
-        echo $mysqli->error;
-
-        // close connection to db
-        $mysqli->close();
-
-        // exit program
-        exit();
-    }
-
     // close db connection
     $mysqli->close();
 ?>
@@ -331,47 +329,24 @@
         <div class="bg-light container-fluid" id="carousel-container">
             <div id="carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-
-                    <!-- 
-                    if count(filepath) for this building id == 0:
-                        display placeholder
-                    else:
-                        $filepath_row = $results_filepaths->fetch_assoc()
-                        display first image
-
-                        while ($filepath_row = $results_filepaths->fetch_assoc()):
-                            display the rest of the images
-                    -->
-
-                    <!-- <?php while ($filepath_row = $results_filepaths->fetch_assoc()) : ?>
+                    <!-- if there's 0 images, display placeholder -->
+                    <?php if (sizeof($results_filepaths->fetch_assoc()) <= 1) : ?>
+                        <!-- item -->
                         <div class="carousel-item active">
                             <div class="carousel-img-container">
-                                <img src= class="carousel-img d-block w-100" alt="./img/test.jpg">
+                                <img src="../img/placeholder.webp" class="carousel-img d-block w-100" alt="./img/test.jpg">
                             </div>
                         </div>
-                    <?php endwhile; ?> -->
-
-                    <!-- item -->
-                    <div class="carousel-item active">
-                        <div class="carousel-img-container">
-                            <img src="../img/placeholder.webp" class="carousel-img d-block w-100" alt="./img/test.jpg">
+                    <!-- else, display all images for this building using their filepaths -->
+                    <?php else : ?>
+                        <?php while ($row_filepaths = $results_filepaths->fetch_assoc()) : ?>
+                        <div class="carousel-item active">
+                            <div class="carousel-img-container">
+                                <img src="<?php echo $row_filepaths['filepath'] ?>" class="carousel-img d-block w-100" alt="<?php echo $row_filepaths['filepath'] ?>">
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- item -->
-                    <div class="carousel-item">
-                        <div class="carousel-img-container">
-                            <img src="../img/rth.jpg" class="carousel-img d-block w-100" alt="./img/test.jpg">
-                        </div>
-                    </div>
-
-                    <!-- item -->
-                    <div class="carousel-item">
-                        <div class="carousel-img-container">
-                            <img src="../img/leavey.jpg" class="carousel-img d-block w-100" alt="./img/test.jpg">
-                        </div>
-                    </div>
-                </div>
+                        <?php endwhile; ?>
+                    <?php endif; ?>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
