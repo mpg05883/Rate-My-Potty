@@ -17,8 +17,8 @@
     // define charset
     $mysqli->set_charset('utf8');
 
-    // SQL cmd to get all building abbreviations and building ids in alphabetical order 
-    $sql_cmd = "SELECT abbreviation, building_id
+    // SQL cmd to get all building names and building ids in alphabetical order 
+    $sql_cmd = "SELECT name, building_id
                             FROM buildings
                             ORDER BY abbreviation ASC;";
 
@@ -97,13 +97,13 @@
                                 <?php if ($row['building_id'] == $building_id) :  ?>
                                     
                                     <option value="<?php echo $row['building_id']; ?>" selected>
-                                        <?php echo $row['abbreviation']; ?>
+                                        <?php echo $row['name']; ?>
                                     </option>
 
                                 <?php else : ?>
 
                                     <option value="<?php echo $row['building_id']; ?>">
-                                        <?php echo $row['abbreviation']; ?>
+                                        <?php echo $row['name']; ?>
                                     </option>
 
                                 <?php endif; ?>
