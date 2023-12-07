@@ -37,13 +37,13 @@
 	}
 
     // while we can read rows from db:
-    while ($row = $results_marker_info->fetch_assoc()) {        
+    while ($row_marker_info = $results_marker_info->fetch_assoc()) {        
         // init associative array where each index holds an array of [building_id, abbreviation, lng, lat]
         $marker_info[] = [
-            'building_id' => $row['building_id'],
-            'abbreviation' => $row['abbreviation'],
-            'longitude' => number_format($row['longitude'], 7, '.', ''),
-            'latitude' => number_format($row['latitude'], 7, '.', ''),
+            'building_id' => $row_marker_info['building_id'],
+            'abbreviation' => $row_marker_info['abbreviation'],
+            'longitude' => number_format($row_marker_info['longitude'], 7, '.', ''),
+            'latitude' => number_format($row_marker_info['latitude'], 7, '.', ''),
         ]; 
     }
 
@@ -51,8 +51,6 @@
 
     // format marker info as JSON
     $json_marker_info = json_encode($marker_info);
-
-    // echo '<pre>', var_dump($json_marker_info), '</pre>';
 
     // if building id is null:
     if (is_null($_GET['building_id'])) {
@@ -194,7 +192,7 @@
 
                             console.log(longitude);
 
-                            // const bathroomPopUpLink = "<a class=\"dropdown-item fw-medium\" href=\"../pages/bathroom.php?building_id=\<?php echo $row['building_id'] ?>\">\<?php echo $row['abbreviation']; ?> </a>";
+                            // const bathroomPopUpLink = "<a class=\"dropdown-item fw-medium\" href=\"../pages/bathroom.php?building_id=\<?php echo $row_marker_info['building_id'] ?>\">\<?php echo $row_marker_info['abbreviation']; ?> </a>";
                                         
                             // init new popup
                             const popup = new mapboxgl.Popup({ offset: 25 }).setText(abbreviation);
