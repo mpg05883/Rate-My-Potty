@@ -1,3 +1,6 @@
-SELECT review_id, first_name, last_name, rating, comments
+SELECT filepath
 FROM reviews
-WHERE building_id = 4;
+WHERE filepath IS NOT NULL;
+
+-- SELECT filepath
+-- FROM reviews;

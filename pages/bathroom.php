@@ -383,7 +383,7 @@
                     <!-- rating -->
                     <div class="" id="rating-container">
                         <?php echo printStars($average_rating); ?>
-                        <span class="ps-2 fw-medium fs-5"><?php echo $average_rating ?></span>
+                        <span class="ps-2 fw-medium fs-5"><?php echo sprintf("%0.1f", $average_rating) ?></span>
                         <span class="ps-1 fw-medium fs-5 text-nowrap"><?php echo " (" . $number_of_reviews . " reviews)"?></span>
                     </div>
                 </div>
@@ -561,10 +561,14 @@
                                     <i class="fa-solid fa-user fa-2xl"></i>
                                     <span class="px-4 fw-semibold fs-5"><?php echo $val[1] . " " . $val[2]; ?></span>
                                 </div>
-                                <div class="py-2 d-block" id="rating-container">
+                                <div class="py-2 d-block">
                                     <?php printStars($val[3]); ?>
                                 </div>
                                 <p class="user-review"><?php echo $val[4]; ?></p>
+                                <div class="button-container">
+                                    <button type="button" class="btn btn-secondary me-2">Edit</button>
+                                    <button onclick="location.href = '../pages/delete_review_confirmation.php?review_id=<?php echo $val[0]; ?>'" type="button" class="btn btn-danger">Delete</button>
+                                </div>
                             </div>
                             <?php endforeach; ?>
                         <?php endif; ?>

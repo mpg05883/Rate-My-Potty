@@ -61,7 +61,7 @@
     <script src="https://kit.fontawesome.com/8cd52aea40.js" crossorigin="anonymous"></script>
     
     <!-- title -->
-    <title>Rate My Potty | Review Form</title>
+    <title>Rate My Potty | Add Review Form</title>
     
     <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="../img/logo.png">

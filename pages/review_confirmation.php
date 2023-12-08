@@ -17,15 +17,27 @@
     // if first name, last name, or rating are invalid:
     if ($firstNameInvalid || $lastNameInvalid) {
         $error = "Invalid input. Please submit a first and last name";
+
+        // exit program
+        exit();
     }
     else {
         //* ========== move photo to uploads folder ==========
-        // if there's an uploaded photo:
-        if ( !empty($_FILES['review_photo']) ) {
+        // save file name
+        $fileName = $_FILES["review_photo"]["name"];
+
+        // if no photo was uploaded
+        if (trim($fileName) == '') {
+            $destination = null;
+        } 
+        else {
             // if there's an error with the file:
-            if ($_FILES['review_photo']['error'] > 0) {
+            if ($_FILES['review_photo']['error'] > 0 ) {
                 // print error
                 $error = "File upload error # " . $_FILES['review_photo']['error'];
+
+                // exit program
+                exit();
             }
             // else - there's no error with the file
             else {
@@ -34,11 +46,9 @@
                 $destination = "../uploads/" . $_FILES['review_photo']['name'];
                 $destination = preg_replace('/\s/', '_', $destination);
                 move_uploaded_file($source, $destination);
-
-                // create upload's filepath
-                // echo $destination;
             }        
         } 
+
         //* ========== connect to db, insert review, and insert filepath ==========
         // require db credentials
         require "../config/config.php";
@@ -70,14 +80,37 @@
             $comments = $_POST['comments'];
         } 
         else {
-            $comments = "null";
+            $comments = null;
         }
 
-        // SQL cmd to insert new review
-        $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
-                                                VALUES ($building_id, '$firstName', '$lastName', $rating, '$comments', '$destination');";
+        $nullDestination = is_null($destination);
+        $nullComments = is_null($comments);
 
-// query SQL cmd
+        // if destination and comments are null
+        if ($nullDestination && $nullComments) {
+            $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
+                                        VALUES ($building_id, '$firstName', '$lastName', $rating, NULL, NULL);";
+        }
+        
+        // if destination is not null and comments are null
+        else if (!$nullDestination && $nullComments) {
+            $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
+                                        VALUES ($building_id, '$firstName', '$lastName', $rating, NULL, '$destination');";
+        }
+
+        // if destination is null and comments are not null
+        else if ($nullDestination && !$nullComments) {
+            $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
+                                        VALUES ($building_id, '$firstName', '$lastName', $rating, '$comments', NULL);";
+        }
+
+        // if destination and comments are not null
+        else {
+            $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
+                                        VALUES ($building_id, '$firstName', '$lastName', $rating, '$comments', '$destination');";
+        }
+
+        // query SQL cmd
         $results_insert_new_review = $mysqli->query($sql_insert_new_review);
 
         // if there's an error with querying the SQL cmd:
