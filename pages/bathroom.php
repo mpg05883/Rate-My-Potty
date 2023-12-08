@@ -566,7 +566,7 @@
                                 </div>
                                 <p class="user-review"><?php echo $val[4]; ?></p>
                                 <div class="button-container">
-                                    <button type="button" class="btn btn-secondary me-2">Edit</button>
+                                    <button onclick="location.href = '../pages/edit_review_form.php?review_id=<?php echo $val[0]; ?>'" type="button" class="btn btn-secondary me-2">Edit</button>
                                     <button onclick="location.href = '../pages/delete_review_confirmation.php?review_id=<?php echo $val[0]; ?>'" type="button" class="btn btn-danger">Delete</button>
                                 </div>
                             </div>

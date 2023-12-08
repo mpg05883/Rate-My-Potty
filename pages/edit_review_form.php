@@ -14,8 +14,34 @@
         exit();
     }
 
+    // save review id
+    $review_id = $_GET["review_id"];
+
     // define charset
     $mysqli->set_charset('utf8');
+
+    // SQL cmd to get review info
+    $sql_get_review_info = "SELECT building_id, first_name, last_name, rating, comments, filepath
+                FROM reviews
+                WHERE review_id = " . $review_id . ";";
+
+    // query SQL cmd
+    $results_get_review_info = $mysqli->query($sql_get_review_info);
+
+    // if there's an error with querying the SQL cmd:
+    if (!$results_get_review_info) {
+        // print error
+        echo $mysqli->error;
+
+        // close connection to db
+		$mysqli->close();
+
+        // exit program
+		exit();
+    }
+
+    // save info from results
+    $review_info = $results_get_review_info->fetch_assoc();
 
     // SQL cmd to get all building names and building ids in alphabetical order 
     $sql_buildings = "SELECT name, building_id
@@ -61,7 +87,7 @@
     <script src="https://kit.fontawesome.com/8cd52aea40.js" crossorigin="anonymous"></script>
     
     <!-- title -->
-    <title>Rate My Potty | Add Review Form</title>
+    <title>Rate My Potty | Edit Review Form</title>
     
     <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="../img/logo.png">
@@ -72,18 +98,20 @@
         <!-- container for input forms -->
         <div class="p-5 row justify-content-center container-fluid">
             <div class="col-8"> 
-                <h1 class="animate__animated animate__fadeInUp animate__slow" id="building-name">Write Your Review</h1>
-                <form action="review_confirmation.php" method="POST" enctype="multipart/form-data">
+                <h1 class="animate__animated animate__fadeInUp animate__slow" id="building-name">Edit Your Review</h1>
+                <form action="edit_review_confirmation.php" method="POST" enctype="multipart/form-data">
+                    <input type="number" name="review_id" value="<?php echo $review_id; ?>" id="review-id" style="display: none;">
+                    
                     <!-- first name - text input -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slow">
                         <h5>First Name</h5>
-                        <input name="firstName" id="first-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. John" aria-label="firstName" aria-describedby="basic-addon1">
+                        <input name="firstName" value="<?php echo $review_info["first_name"]; ?>" id="first-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. John" aria-label="firstName" aria-describedby="basic-addon1">
                     </div>
-                    
+
                     <!-- last name - text input -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slow">
                         <h5>Last Name</h5>
-                        <input name="lastName" id="last-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. Smith" aria-label="lastName" aria-describedby="basic-addon1">
+                        <input name="lastName" value="<?php echo $review_info["last_name"]; ?>" id="last-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. Smith" aria-label="lastName" aria-describedby="basic-addon1">
                     </div>
 
                     <!-- buidling dropdown menu -->
@@ -94,7 +122,7 @@
 
                             <?php while ( $row = $results_buildings->fetch_assoc() ) : ?>
 
-                                <?php if ($row['building_id'] == $building_id) :  ?>
+                                <?php if ($row['building_id'] == $review_info["building_id"]) :  ?>
                                     
                                     <option value="<?php echo $row['building_id']; ?>" selected>
                                         <?php echo $row['name']; ?>
@@ -111,10 +139,12 @@
                             
                         </select>
                     </div>
+
                     <!-- number rating -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slower">
                         <h5>Rating</h5>
                         <select name="rating" id="rating-id" class="w-50 form-control" required>
+                            <!-- select previous option -->
                             <option value="null" selected disabled>-- Select One --</option>
                             <option value="0">0</option>
                             <option value="1">1</option>
@@ -128,19 +158,19 @@
                     <!-- comments - text input -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slower">
                         <h5>Comments</h5>
-                        <textarea rows="4" name="comments" id="comments-id" class="w-50 form-control" spellcheck="true" required></textarea>
+                        <textarea rows="4" name="comments" id="comments-id" class="w-50 form-control" spellcheck="true"><?php echo $review_info["comments"]; ?></textarea>
                     </div>  
 
                     <!-- picture upload -->
-                    <div class="py-3 animate__animated animate__fadeInUp animate__slower">
+                    <!-- <div class="py-3 animate__animated animate__fadeInUp animate__slower">
                         <h5>Upload Photos</h5>
                         <div class="mb-3">
-                            <input class="form-control w-25" name="review_photo" type="file" id="review-photo-upload">
+                            <input class="form-control w-25" name="review_photo" value="<?php echo $review_info["filepath"]; ?>" type="file" id="review-photo-upload">
                         </div>
-                    </div>  
+                    </div>   -->
 
                     <!-- submit btn -->
-                    <button href="../pages/upload_form.html" type="submit" class="rounded-3 btn fw-medium animate__animated animate__fadeInUp animate__slower" id="submit-btn">
+                    <button href="../pages/upload_form.html" type="submit" class="my-4 rounded-3 btn fw-medium animate__animated animate__fadeInUp animate__slower" id="submit-btn">
                         <span id="submit-btn-text">Submit</span>
                     </button>
                 </form>
