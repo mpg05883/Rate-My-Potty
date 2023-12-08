@@ -5,31 +5,30 @@
     // connect to MySQL
     $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-    // if there's a connection error:
+    /* if there's a connection error:
+        - print error
+        - exit program 
+    */
     if ($mysqli->connect_errno) {
-        // print error
-        echo $mysqli->connect_error;
-        
-        // exit program
+        echo $mysqli->connect_error;        
         exit();
     }
 
     // define charset
     $mysqli->set_charset('utf8');
 
-    // write SQL cmd to get building id, abbreviation, 
+    // sql cmd to get building id, abbreviation, lng, and lat for markers
     $sql_marker_info = "SELECT building_id, abbreviation, longitude, latitude
                         FROM buildings;";
 
-    // query SQL cmd
+    // query sql cmd
     $results_marker_info  = $mysqli->query($sql_marker_info );
 	
-    /* if the SQL cmd returns an error:
+    /* if the sql cmd returns an error:
         - print the error  
         - close db connection
         - exit program
     */
-
     if (!$results_marker_info) {
 		echo $mysqli->error;
 		$mysqli->close();
@@ -47,9 +46,7 @@
         ]; 
     }
 
-    // echo '<pre>', var_dump($marker_info), '</pre>';
-
-    // format marker info as JSON
+    // convert marker info to json representation
     $json_marker_info = json_encode($marker_info);
 
     // if building id is null:
@@ -57,7 +54,7 @@
         // set building id to 0
         $building_id = 0;
     }
-    // else - set building it to $_GET['building_id']
+    // else: set building id to $_GET['building_id']
     else {
         $building_id = $_GET['building_id'];
     }
@@ -82,10 +79,10 @@
     <!-- animate css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
-    <!-- awesome font-->
+    <!-- font awesome -->
     <script src="https://kit.fontawesome.com/8cd52aea40.js" crossorigin="anonymous"></script>
 
-    <!-- mapbox map -->
+    <!-- mapbox -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
     
@@ -94,12 +91,6 @@
     
     <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="../img/logo.png">
-    <!-- <style>
-        .mapboxgl-popup {
-        max-width: 400px;
-        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-        }
-    </style> -->
 </head>
 <body>
     <!-- mapbox-gl-geocoder plugin -->
@@ -115,47 +106,57 @@
             </div>
         </div>
 
-        <!-- parent container's container -->
-        <div class="row justify-content-center container-fluid" id="grandparent-container">
-            <!-- container for the rest of the page -->
-            <div class="col-6" id="parent-container">
+        <!-- container to center the rest of the page -->
+        <div class="row justify-content-center container-fluid" id="center-container">
+            <!-- container to make rest of the page narrower -->
+            <div class="py-4 col-8" id=" narrow-container">
+                
                 <!-- mission section -->
                 <div class="py-4 text-center container-fluid" id="mission-container">
+                    
                     <!-- mission header -->
-                    <h1 class="pt-4 animate__animated animate__fadeInUp" id="mission-header">Our Mission</h1>
+                    <h1 class="animate__animated animate__fadeInUp" id="mission-header">Our Mission</h1>
                     
                     <!-- mission statement -->
-                    <p class="lh-lg animate__animated animate__fadeInUp" id="mission-statement">
+                    <p class="py-2 lh-lg animate__animated animate__fadeInUp" id="mission-statement">
                         Welcome to Rate My Potty! We empower students to conquer the porcelain throne through the 
                         power of peer review. No more bathroom roulette! Unmask hidden gems and expose hygiene horrors 
                         with reviews from real people and insider tips to guide you to the cleanest, most comfortable stalls of USC. 
                     </p>
 
-                    <!-- mission-item-row -->
-                    <div class="p-2 row justify-content-center container-fluid animate__animated animate__fadeInUp animate__slower" id="mission-item-row">
+                    <!-- mission-items-container -->
+                    <div class="py-1 row justify-content-center container-fluid animate__animated animate__fadeInUp animate__slower" id="mission-items-container">
+                        
+                        <!-- mission item 1 -->
                         <div class="col-sm-12 col-md-6 col-lg-4 hover-enlarge">
                             <i class="fa-solid fa-hand-sparkles fa-2xl"></i>
-                            <p class="p-2 mission-item-text">Find clean bathrooms</p>
+                            <p class="pt-3 pb-2 mission-item-text">Find clean bathrooms</p>
                         </div>
+
+                        <!-- mission item 2 -->
                         <div class="col-sm-12 col-md-6 col-lg-4 hover-enlarge">
                             <i class="fa-solid fa-map-location-dot fa-2xl"></i>
-                            <p class="p-2 mission-item-text">Search for bathrooms by location</p>
+                            <p class="pt-3 pb-2 mission-item-text">Search by location</p>
                         </div>
+
+                        <!-- mission item 3 -->
                         <div class="col-sm-12 col-md-6 col-lg-4 hover-enlarge">
                             <i class="fa-solid fa-thumbs-up fa-2xl"></i>
-                            <p class="p-2 mission-item-text">Reviews from real USC students</p>
+                            <p class="pt-3 pb-2 mission-item-text">Reviews from verified users</p>
                         </div>
+                        
                     </div>
 
                     <!-- review btn -->
-                    <button onclick="location.href = '../pages/review_form.php?building_id=<?php echo $building_id; ?>'" type="button" class="rounded-4 btn fw-medium animate__animated animate__fadeInUp animate__slower" id="review-btn">
+                    <button class="rounded-3 btn fw-medium animate__animated animate__fadeInUp animate__slower" onclick="location.href = '../pages/review_form.php?building_id=<?php echo $building_id; ?>'" type="button" id="review-btn">
                         <i class="fa-solid fa-pen-to-square fa-sm pe-1" style="color: #000000;"></i>
                         <span id="review-btn-text">Write a review</span>
                     </button>
+                    
                 </div>
 
                 <!-- map container -->
-                <div class="rounded-5 my-4 py-4 animate__animated animate__fadeInUp container-fluid" id="map">
+                <div class="rounded-4 my-4 py-4 animate__animated animate__fadeInUp container-fluid" id="map">
                     <script>
                         // API token
                         mapboxgl.accessToken = 'pk.eyJ1IjoibXBnZWUiLCJhIjoiY2xwb3k1ZTFjMHJseDJpcTRiZXFlcGwzaiJ9.xT9UpvZS1bB_T8WmRKS1vQ';
@@ -209,6 +210,7 @@
                         }
                     </script>
                 </div>
+                
             </div>
         </div>
     </main>

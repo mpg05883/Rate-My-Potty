@@ -1,26 +1,5 @@
 <?php
-    // require db credentials
-    require "../config/config.php";
-
-    // connect to MySQL
-    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-    // if there's a connection error:
-    if ($mysqli->connect_errno) {
-        // print error
-        echo $mysqli->connect_error;
-        
-        // exit program
-        exit();
-    }
-
-    // define charset
-    $mysqli->set_charset('utf8');
-
-    // save building id
-    $building_id = $_GET['building_id'];
-
-    //* define function to print # of starts
+    // define function to print # of starts:
     function printStars($rating) {    
         if (round($rating) == 0) {
             echo "<span class=\"fa fa-star\"></span>
@@ -66,6 +45,27 @@
         }
     }
 
+    // require db credentials
+    require "../config/config.php";
+
+    // connect to MySQL
+    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+    /* if there's a connection error:
+        - print error
+        - exit program 
+    */
+    if ($mysqli->connect_errno) {
+        echo $mysqli->connect_error;        
+        exit();
+    }
+
+    // define charset
+    $mysqli->set_charset('utf8');
+
+    // save building id from $_GET
+    $building_id = $_GET['building_id'];
+
     //* get filepaths to photos for this building
     // SQL cmd to get non null filepaths for this building
     $sql_filepaths = "SELECT filepath
@@ -88,11 +88,11 @@
         exit();
     }
 
-    // store all filepaths in an assoc array
+    // store filepaths in an array
     $filepaths = $results_filepaths->fetch_all();
 
     //* get building info (name, abbreviation, address, lng, and lat)
-    // SQL cmd to get building info for the given building id
+    // SQL cmd to get name, abbreviation, address, lng, and lat for current building
     $sql_building_info = "SELECT name, abbreviation, address, longitude, latitude
                         FROM buildings
                         WHERE building_id = " . $building_id . ";";
@@ -123,7 +123,7 @@
     $latitude = number_format($building_info["latitude"], 7, '.', '');
 
     //* get opening and closing hours for each day of the week
-    // SQL cmd to get building hours
+    // SQL cmd to get building's opening and closing hours
     $sql_hours = "SELECT 
                     time_format(mon_open, '%h %i %p') as mon_open,
                     time_format(mon_close, '%h %i %p') as mon_close,
@@ -176,7 +176,7 @@
     $sun_open = $hours['sun_open'];
     $sun_close = $hours['sun_close'];
 
-    //* get amenities
+    //* get building's amenities
     // SQL cmd to get amenities
     $sql_amenities = "SELECT *
                     FROM amenities
@@ -211,8 +211,8 @@
     $shower = $amenities['shower'];
     $ply = $amenities['ply'];
 
-    //* get reviews
-    // SQL cmd to get reviews for this build
+    //* get this building's reviews
+    // SQL cmd to get review id, first name, last name, rating, and comments for this building
     $sql_reviews = "SELECT review_id, first_name, last_name, rating, comments
                     FROM reviews
                     WHERE building_id = " . $building_id . ";";
@@ -240,7 +240,7 @@
                             FROM reviews
                             WHERE building_id = " . $building_id . ";";
 
-    // query 
+    // query sql cmd
     $results_number_of_reviews = $mysqli->query($sql_number_of_reviews);
 
     // if there's an error with querying the SQL cmd:
@@ -287,7 +287,8 @@
     // save # of reviews from associative array
     $sum_of_reviews = $row_sum_of_reviews ['sum'];
 
-    // calculate average rating
+    // calculate average rating:
+    // prevent divide by 0 error
     if (count($reviews) == 0) {
         $average_rating = 0;
     }
@@ -298,7 +299,6 @@
     // close db connection
     $mysqli->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -324,7 +324,6 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
     
     <!-- title -->
-    <!-- echo building abbrevation in title -->
     <title>Rate My Potty | <?php echo $abbreviation ?></title>
     
     <!-- favicon -->
@@ -338,6 +337,7 @@
         <div class="bg-light container-fluid" id="carousel-container">
             <div id="carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
+
                     <!-- if there's 0 images, display placeholder -->
                     <?php if (count($filepaths) == 0) : ?>
                         <!-- item -->
@@ -346,6 +346,7 @@
                                 <img src="../img/placeholder.webp" class="carousel-img d-block w-100" alt="placeholder">
                             </div>
                         </div>
+
                     <!-- else, display all images for this building -->
                     <?php else : ?>
                         <?php foreach ($filepaths as $key => $val) : ?>
@@ -356,25 +357,32 @@
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
+
                 </div>
+
+                <!-- left carousel button -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
+
+                <!-- right carousel button -->
                 <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
+
             </div>
         </div>
 
-        <!-- container-container for text content -->
-        <div class="p-5 row justify-content-center container-fluid" id="text-content-container-container">
-            <!-- container for text content -->
-            <div class="col-8" id="text-content-container">
+        <!-- container to center the rest of the page -->
+        <div class="row justify-content-center container-fluid" id="center-container">
+            
+            <!-- container to make rest of page narrower -->
+            <div class="col-8 my-4" id="narrow-container">
 
                 <!-- container for name, rating, address, and review button -->
-                <div class="pb-4 animate__animated animate__fadeInUp row" id="name-rating-address-container">
+                <div class="mt-4 mb-2 animate__animated animate__fadeInUp row" id="name-rating-address-container">
                     <!-- building name -->
                     <h1 id="building-name">
                         <?php echo $name . " (" . $abbreviation . ")" ?>
@@ -388,23 +396,25 @@
                     </div>
                 </div>
                 
-                <!-- review btn -- DONT put in a div -->
-                <button onclick="location.href = '../pages/review_form.php?building_id=<?php echo $building_id; ?>'" type="button" class="btn fw-medium animate__animated animate__fadeInUp animate__slower" id="review-btn">
+                <!-- review btn - DONT put in a div -->
+                <button class="mb-2 rounded-3 btn fw-medium animate__animated animate__fadeInUp animate__slower" onclick="location.href = '../pages/review_form.php?building_id=<?php echo $building_id; ?>'" type="button" id="review-btn">
                     <i class="fa-solid fa-pen-to-square fa-sm pe-1" style="color: #000000;"></i>
-                    Write a review
+                    <span id="review-btn-text">Write a review</span>
                 </button>
                 
                 <!-- container for map, hours, and amenities -->
-                <div class="py-4 row justify-content-between align-items-start animate__animated animate__fadeInUp animate__slow" id="map-hours-and-amenities-container">
+                <div class="my-4 row justify-content-between align-items-start animate__animated animate__fadeInUp animate__slow" id="map-hours-and-amenities-container">
                     
                     <!-- container for address and map -->
-                    <div class="col-sm-12 col-md-6 col-lg-3 my-2 py-2 animate__animated animate__fadeInUp container-fluid">
+                    <div class="col-sm-12 col-md-6 col-lg-3 animate__animated animate__fadeInUp container-fluid" id="map-address-container">
+            
                         <!-- address -->
-                        <p class="" id="address">
+                        <p class="text-center fw-normal" id="address">
                             <?php echo $address . ", Los Angeles, CA 90089" ?>
                         </p>
+
                         <!-- map -->
-                        <div class="rounded-5" id="map">
+                        <div class="rounded-4" id="map">
                             <script>
                                 // API token
                                 mapboxgl.accessToken = 'pk.eyJ1IjoibXBnZWUiLCJhIjoiY2xwb3k1ZTFjMHJseDJpcTRiZXFlcGwzaiJ9.xT9UpvZS1bB_T8WmRKS1vQ';
@@ -430,8 +440,8 @@
                     </div>
                 
                     <!-- hours -->
-                    <div class="text-center my-2-lg py-2-lg col-sm-12 col-md-6 col-lg-4" id="hours-container">
-                        <h2 id="hours-header">Hours</h2>
+                    <div class="mt-sm-4 text-center my-md-0 py-2-lg col-sm-12 col-md-6 col-lg-4" id="hours-container">
+                        <h2 class="" id="hours-header">Hours</h2>
                         <table class="py-4" id="hours-table">
                             <tr id="monday-row">
                                 <td class="day-of-the-week">Mon</td>
@@ -465,7 +475,7 @@
                     </div>
 
                     <!-- amenities container container -->
-                    <div class="text-center my-2-md py-2-md col-sm-12 col-md-6 col-lg-5" id="amenities-container-container">
+                    <div class="mt-sm-4 mt-lg-0 text-center my-2-md py-2-md col-sm-12 col-md-6 col-lg-5" id="amenities-container-container">
                         <h2 class="pb-3" id="amenities-header">Amenities</h2>
                         <div class="" id="amenities-container">
                             <div class="row">
@@ -548,15 +558,15 @@
                 </div>
     
                 <!-- reviews-container -->
-                <div class="row pt-2 pt-4-lg animate__animated animate__fadeInUp animate__slow" id="reviews-container">
+                <div class="row mt-2 mt-4-lg animate__animated animate__fadeInUp animate__slow" id="reviews-container">
                     <!-- reviews header -->
-                    <h2 class="" id="reviews-header">Reviews</h2>
+                    <h2 class="pt-2" id="reviews-header">Reviews</h2>
                         <?php if (sizeof($reviews) == 0) : ?>
                             <p>No reviews</p>
                         <?php else : ?>
                             <!-- review-container -->
                             <?php foreach ($reviews as $key => $val) : ?>
-                            <div class="bg-light my-3 p-4 rounded-5 review-container">
+                            <div class="bg-light my-3 p-4 rounded-4 review-container">
                                 <div class="p-3 user-info-container">
                                     <i class="fa-solid fa-user fa-2xl"></i>
                                     <span class="px-4 fw-semibold fs-5"><?php echo $val[1] . " " . $val[2]; ?></span>
