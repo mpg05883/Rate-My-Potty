@@ -119,9 +119,9 @@
                     
                     <!-- mission statement -->
                     <p class="py-2 lh-lg animate__animated animate__fadeInUp" id="mission-statement">
-                        Welcome to Rate My Potty! We empower students to conquer the porcelain throne through the 
+                        Welcome to Rate My Potty! We empower people to conquer the porcelain throne through the 
                         power of peer review. No more bathroom roulette! Unmask hidden gems and expose hygiene horrors 
-                        with reviews from real people and insider tips to guide you to the cleanest, most comfortable stalls of USC. 
+                        with reviews from real people and insider tips to guide you to the cleanest, most comfortable stalls. 
                     </p>
 
                     <!-- mission-items-container -->
@@ -142,7 +142,7 @@
                         <!-- mission item 3 -->
                         <div class="col-sm-12 col-md-6 col-lg-4 hover-enlarge">
                             <i class="fa-solid fa-circle-check fa-2xl"></i>
-                            <p class="pt-3 pb-2 mission-item-text">Reviews from real USC students</p>
+                            <p class="pt-3 pb-2 mission-item-text">Reviews from verified users</p>
                         </div>
                         
                     </div>
@@ -152,7 +152,6 @@
                         <i class="fa-solid fa-pen-to-square fa-sm pe-1" style="color: #000000;"></i>
                         <span id="review-btn-text">Write a review</span>
                     </button> -->
-                    
                 </div>
 
                 <!-- map container -->
