@@ -99,7 +99,7 @@
                     </div>
                     
                     <!-- write a review button -->
-                    <a class="px-2 nav-link rounded-3 fw-medium" aria-current="page" href="../pages/review_form.php?building_id=<?php echo $building_id; ?>" style="color: aliceblue;">Write a Review</a>
+                    <a class="px-2 nav-link rounded-3 fw-medium" aria-current="page" href="../pages/add_review_form.php?building_id=<?php echo $building_id; ?>" style="color: aliceblue;">Write a Review</a>
                 </div>
             </div>
         </div>

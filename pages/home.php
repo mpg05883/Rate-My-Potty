@@ -141,17 +141,17 @@
 
                         <!-- mission item 3 -->
                         <div class="col-sm-12 col-md-6 col-lg-4 hover-enlarge">
-                            <i class="fa-solid fa-thumbs-up fa-2xl"></i>
-                            <p class="pt-3 pb-2 mission-item-text">Reviews from verified users</p>
+                            <i class="fa-solid fa-circle-check fa-2xl"></i>
+                            <p class="pt-3 pb-2 mission-item-text">Reviews from real USC students</p>
                         </div>
                         
                     </div>
 
                     <!-- review btn -->
-                    <button class="rounded-3 btn fw-medium animate__animated animate__fadeInUp animate__slower" onclick="location.href = '../pages/review_form.php?building_id=<?php echo $building_id; ?>'" type="button" id="review-btn">
+                    <!-- <button class="rounded-3 btn fw-medium animate__animated animate__fadeInUp animate__slower" onclick="location.href = '../pages/review_form.php?building_id=<?php echo $building_id; ?>'" type="button" id="review-btn">
                         <i class="fa-solid fa-pen-to-square fa-sm pe-1" style="color: #000000;"></i>
                         <span id="review-btn-text">Write a review</span>
-                    </button>
+                    </button> -->
                     
                 </div>
 

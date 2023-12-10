@@ -73,23 +73,24 @@
         <div class="p-5 row justify-content-center container-fluid">
             <div class="col-8"> 
                 <h1 class="animate__animated animate__fadeInUp animate__slow" id="building-name">Write Your Review</h1>
-                <form action="review_confirmation.php" method="POST" enctype="multipart/form-data">
+                <form action="add_review_confirmation.php" method="POST" enctype="multipart/form-data">
                     <!-- first name - text input -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slow">
                         <h5>First Name</h5>
-                        <input name="firstName" id="first-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. John" aria-label="firstName" aria-describedby="basic-addon1">
+                        <input name="firstName" id="first-name" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. John" aria-label="firstName" aria-describedby="basic-addon1">
+                        <small class="error" id="first-name-error">test</small>
                     </div>
                     
                     <!-- last name - text input -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slow">
                         <h5>Last Name</h5>
-                        <input name="lastName" id="last-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. Smith" aria-label="lastName" aria-describedby="basic-addon1">
+                        <input name="lastName" id="last-name" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. Smith" aria-label="lastName" aria-describedby="basic-addon1">
                     </div>
 
                     <!-- buidling dropdown menu -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slow">
                         <h5>Building</h5>
-                        <select name="building_id" id="building-id" class="w-50 form-control" required>
+                        <select name="building_id" id="building" class="w-50 form-control" required>
                             <option value="null" selected disabled>-- Select One --</option>
 
                             <?php while ( $row = $results_buildings->fetch_assoc() ) : ?>
@@ -114,7 +115,7 @@
                     <!-- number rating -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slower">
                         <h5>Rating</h5>
-                        <select name="rating" id="rating-id" class="w-50 form-control" required>
+                        <select name="rating" id="rating" class="w-50 form-control" required>
                             <option value="null" selected disabled>-- Select One --</option>
                             <option value="0">0</option>
                             <option value="1">1</option>
@@ -128,7 +129,7 @@
                     <!-- comments - text input -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slower">
                         <h5>Comments</h5>
-                        <textarea rows="4" name="comments" id="comments-id" class="w-50 form-control" spellcheck="true" required></textarea>
+                        <textarea rows="4" name="comments" id="comments" class="w-50 form-control" spellcheck="true" required></textarea>
                     </div>  
 
                     <!-- picture upload -->
@@ -152,5 +153,6 @@
     <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="../script/verify_add_review.js"></script>
 </body>
 </html>

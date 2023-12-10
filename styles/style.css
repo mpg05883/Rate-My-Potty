@@ -94,6 +94,10 @@ i, .checked {
     font-size: 1rem;
 }
 
+.error {
+    color: red;
+}
+
 /* different color borders for debugging */
 .red-border {
     border: 2px solid red;

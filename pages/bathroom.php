@@ -397,7 +397,7 @@
                 </div>
                 
                 <!-- review btn - DONT put in a div -->
-                <button class="mb-2 rounded-3 btn fw-medium animate__animated animate__fadeInUp animate__slower" onclick="location.href = '../pages/review_form.php?building_id=<?php echo $building_id; ?>'" type="button" id="review-btn">
+                <button class="mb-2 rounded-3 btn fw-medium animate__animated animate__fadeInUp animate__slower" onclick="location.href = '../pages/add_review_form.php?building_id=<?php echo $building_id; ?>'" type="button" id="review-btn">
                     <i class="fa-solid fa-pen-to-square fa-sm pe-1" style="color: #000000;"></i>
                     <span id="review-btn-text">Write a review</span>
                 </button>
@@ -423,7 +423,7 @@
                                     container: 'map', // container's id
                                     style: 'mapbox://styles/mapbox/streets-v12', // style
                                     center: [<?php echo $longitude ?>, <?php echo $latitude ?>], // starting position [lng, lat]
-                                    zoom: 16 // starting zoom
+                                    zoom: 15 // starting zoom
                                 });
                                 // init new popup
                             const popup = new mapboxgl.Popup({ offset: 25 });
