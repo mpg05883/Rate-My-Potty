@@ -436,7 +436,7 @@
                                     container: 'map', // container's id
                                     style: 'mapbox://styles/mapbox/streets-v12', // style
                                     center: [<?php echo $longitude ?>, <?php echo $latitude ?>], // starting position [lng, lat]
-                                    zoom: 15 // starting zoom
+                                    zoom: 16 // starting zoom
                                 });
                                 // init new popup
                             const popup = new mapboxgl.Popup({ offset: 25 });
@@ -455,7 +455,7 @@
                     <!-- hours -->
                     <div class="mt-sm-4 text-center my-md-0 py-2-lg col-sm-12 col-md-6 col-lg-4" id="hours-container">
                         <h2 class="" id="hours-header">Hours</h2>
-                        <table class="py-4" id="hours-table">
+                        <table class="text-start py-4" id="hours-table">
                             <tr id="monday-row">
                                 <td class="day-of-the-week">Mon</td>
                                 <?php if (!is_null($mon_open) && !is_null($mon_close)) : ?>
@@ -632,6 +632,5 @@
     <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <!-- <script src="../script/bathroom.js"></script> -->
 </body>
 </html>

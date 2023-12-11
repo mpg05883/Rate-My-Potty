@@ -74,7 +74,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- self-made stylesheets -->
-    <link rel="stylesheet" href="../styles/upload_form.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../styles/form.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../styles/style.css?v=<?php echo time(); ?>">
 
     <!-- bootstrap css -->

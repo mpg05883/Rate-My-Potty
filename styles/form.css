@@ -3,6 +3,10 @@
     src: url(../fonts/SourceSans3-Regular.ttf);
 }
 
+.asterisk {
+    color: red;
+}
+
 #submit-btn {
     background-color: #FDA898;
 }
