@@ -1,4 +1,56 @@
 <?php
+    // define function to select previous option
+    function selectPrevious($previousRating) {
+        if ($previousRating == 0) {
+            echo "<option value=\"0\" selected>0</option>
+            <option value=\"1\">1</option>
+            <option value=\"2\">2</option>
+            <option value=\"3\">3</option>
+            <option value=\"4\">4</option>
+            <option value=\"5\">5</option>";
+        }
+        elseif ($previousRating == 1) {
+            echo "<option value=\"0\">0</option>
+            <option value=\"1\" selected>1</option>
+            <option value=\"2\">2</option>
+            <option value=\"3\">3</option>
+            <option value=\"4\">4</option>
+            <option value=\"5\">5</option>";
+        }
+        elseif ($previousRating == 2) {
+            echo "<option value=\"0\">0</option>
+            <option value=\"1\">1</option>
+            <option value=\"2\" selected>2</option>
+            <option value=\"3\">3</option>
+            <option value=\"4\">4</option>
+            <option value=\"5\">5</option>";
+        }
+        elseif ($previousRating == 3) {
+            echo "<option value=\"0\">0</option>
+            <option value=\"1\">1</option>
+            <option value=\"2\">2</option>
+            <option value=\"3\" selected>3</option>
+            <option value=\"4\">4</option>
+            <option value=\"5\">5</option>";
+        }
+        elseif ($previousRating == 4) {
+            echo "<option value=\"0\">0</option>
+            <option value=\"1\">1</option>
+            <option value=\"2\">2</option>
+            <option value=\"3\">3</option>
+            <option value=\"4\" selected>4</option>
+            <option value=\"5\">5</option>";
+        }
+        else {
+            echo "<option value=\"0\">0</option>
+            <option value=\"1\">1</option>
+            <option value=\"2\">2</option>
+            <option value=\"3\">3</option>
+            <option value=\"4\">4</option>
+            <option value=\"5\" selected>5</option>";
+        }
+    }
+
     // require db credentials
     require "../config/config.php";
 
@@ -43,16 +95,16 @@
     // save info from results
     $review_info = $results_get_review_info->fetch_assoc();
 
-    // SQL cmd to get all building names and building ids in alphabetical order 
-    $sql_buildings = "SELECT name, building_id
-                            FROM buildings
-                            ORDER BY abbreviation ASC;";
+    // SQL cmd to get building name
+    $sql_building = "SELECT name
+                        FROM buildings
+                        WHERE building_id =" . $review_info["building_id"] . ";";
 
     // query SQL cmd
-    $results_buildings = $mysqli->query($sql_buildings);
+    $results_building = $mysqli->query($sql_building);
 
     // if there's an error with querying the SQL cmd:
-    if (!$results_buildings) {
+    if (!$results_building) {
         // print error
         echo $mysqli->error;
 
@@ -62,6 +114,10 @@
         // exit program
 		exit();
     }
+
+    // save building
+    $building_assoc = $results_building->fetch_assoc();
+    $building = $building_assoc["name"];
 
     // close db connection
     $mysqli->close();
@@ -102,42 +158,22 @@
                 <form action="edit_review_confirmation.php" method="POST" enctype="multipart/form-data">
                     <input type="number" name="review_id" value="<?php echo $review_id; ?>" id="review-id" style="display: none;">
                     
-                    <!-- first name - text input -->
+                    <!-- first name -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slow">
                         <h5>First Name</h5>
-                        <input name="firstName" value="<?php echo $review_info["first_name"]; ?>" id="first-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. John" aria-label="firstName" aria-describedby="basic-addon1">
+                        <input name="firstName" value="<?php echo $review_info["first_name"]; ?>" id="first-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. John" aria-label="firstName" aria-describedby="basic-addon1" readonly>
                     </div>
 
-                    <!-- last name - text input -->
+                    <!-- last name -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slow">
                         <h5>Last Name</h5>
-                        <input name="lastName" value="<?php echo $review_info["last_name"]; ?>" id="last-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. Smith" aria-label="lastName" aria-describedby="basic-addon1">
+                        <input name="lastName" value="<?php echo $review_info["last_name"]; ?>" id="last-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. Smith" aria-label="lastName" aria-describedby="basic-addon1" readonly>
                     </div>
 
-                    <!-- buidling dropdown menu -->
+                    <!-- buidling -->
                     <div class="py-3 animate__animated animate__fadeInUp animate__slow">
                         <h5>Building</h5>
-                        <select name="building_id" id="building-id" class="w-50 form-control" required>
-                            <option value="null" selected disabled>-- Select One --</option>
-
-                            <?php while ( $row = $results_buildings->fetch_assoc() ) : ?>
-
-                                <?php if ($row['building_id'] == $review_info["building_id"]) :  ?>
-                                    
-                                    <option value="<?php echo $row['building_id']; ?>" selected>
-                                        <?php echo $row['name']; ?>
-                                    </option>
-
-                                <?php else : ?>
-
-                                    <option value="<?php echo $row['building_id']; ?>">
-                                        <?php echo $row['name']; ?>
-                                    </option>
-
-                                <?php endif; ?>
-                            <?php endwhile; ?>
-                            
-                        </select>
+                        <input name="lastName" value="<?php echo $building; ?>" id="last-name-id" type="text" spellcheck="true" class="w-50 form-control" placeholder="e.g. Smith" aria-label="lastName" aria-describedby="basic-addon1" readonly>
                     </div>
 
                     <!-- number rating -->
@@ -145,13 +181,7 @@
                         <h5>Rating</h5>
                         <select name="rating" id="rating-id" class="w-50 form-control" required>
                             <!-- select previous option -->
-                            <option value="null" selected disabled>-- Select One --</option>
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                            <?php echo selectPrevious($review_info["rating"]); ?>
                         </select>
                     </div>
 
@@ -165,6 +195,7 @@
                     <!-- <div class="py-3 animate__animated animate__fadeInUp animate__slower">
                         <h5>Upload Photos</h5>
                         <div class="mb-3">
+                            <?php echo "filepath" . $review_info["filepath"]; ?>
                             <input class="form-control w-25" name="review_photo" value="<?php echo $review_info["filepath"]; ?>" type="file" id="review-photo-upload">
                         </div>
                     </div>   -->

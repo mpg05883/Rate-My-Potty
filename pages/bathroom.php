@@ -104,6 +104,8 @@
     // store filepaths in an array
     $filepaths = $results_filepaths->fetch_all();
 
+    $i = 0;
+
     //* get building info (name, abbreviation, address, lng, and lat)
     // SQL cmd to get name, abbreviation, address, lng, and lat for current building
     $sql_building_info = "SELECT name, abbreviation, address, longitude, latitude
@@ -359,15 +361,24 @@
                                 <img src="../img/placeholder.webp" class="carousel-img d-block w-100" alt="placeholder">
                             </div>
                         </div>
-
+                        
                     <!-- else, display all images for this building -->
                     <?php else : ?>
                         <?php foreach ($filepaths as $key => $val) : ?>
+                            <?php if ($i == 0) : ?>
                             <div class="carousel-item active">
                                 <div class="carousel-img-container">
                                     <img src="<?php echo($val[0]); ?>" class="carousel-img d-block w-100" alt="<?php echo($val[0]); ?>">
                                 </div>
                             </div>
+                            <?php $i++; ?>
+                            <?php else : ?>
+                            <div class="carousel-item">
+                                <div class="carousel-img-container">
+                                    <img src="<?php echo($val[0]); ?>" class="carousel-img d-block w-100" alt="<?php echo($val[0]); ?>">
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
 

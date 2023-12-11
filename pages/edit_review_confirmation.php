@@ -22,7 +22,7 @@
         exit();
     }
     else {
-        // //* ========== move photo to uploads folder ==========
+        //* ========== move photo to uploads folder ==========
         // // save file name
         // $fileName = $_FILES["review_photo"]["name"];
 
@@ -74,10 +74,21 @@
         $lastName = $_POST['lastName'];
         $building_id = $_POST['building_id'];
         $rating = intval($_POST['rating']);
-        $comments = $_POST['comments'];
+        
+        // if comments is set and not empty:
+        if ( isset($_POST['comments']) && trim($_POST['comments']) != '') {
+            // save comments
+            $comments = $_POST['comments'];
+        } 
+        else {
+            $comments = null;
+        }
+
+        // $filepath = $_POST['filepath'];
 
         // var_dump($_POST);
 
+        // echo "file " . $filepath;
         // // if comments is set and not empty:
         // if ( isset($_POST['comments']) && trim($_POST['comments']) != '') {
         //     // save comments
@@ -87,40 +98,20 @@
         //     $comments = null;
         // }
 
+        // if there are no comments:
+        if (is_null($comments)) {
+            // sql cmd to update review
+            $sql_update_review = "UPDATE reviews
+            SET first_name = '$firstName', last_name = '$lastName', rating = $rating, comments = NULL
+            WHERE review_id = " . $review_id . ";";
+        }
+        else {
+            // sql cmd to update review
+            $sql_update_review = "UPDATE reviews
+            SET first_name = '$firstName', last_name = '$lastName', rating = $rating, comments = '$comments'
+            WHERE review_id = " . $review_id . ";";
+        }
         
-
-        // $nullDestination = is_null($destination);
-        // $nullComments = is_null($comments);
-
-        // if destination and comments are null
-        // if ($nullDestination && $nullComments) {
-        //     $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
-        //                                 VALUES ($building_id, '$firstName', '$lastName', $rating, NULL, NULL);";
-        // }
-        
-        // // if destination is not null and comments are null
-        // else if (!$nullDestination && $nullComments) {
-        //     $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
-        //                                 VALUES ($building_id, '$firstName', '$lastName', $rating, NULL, '$destination');";
-        // }
-
-        // // if destination is null and comments are not null
-        // else if ($nullDestination && !$nullComments) {
-        //     $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
-        //                                 VALUES ($building_id, '$firstName', '$lastName', $rating, '$comments', NULL);";
-        // }
-
-        // // if destination and comments are not null
-        // else {
-        //     $sql_insert_new_review = "INSERT INTO reviews (building_id, first_name, last_name, rating, comments, filepath)
-        //                                 VALUES ($building_id, '$firstName', '$lastName', $rating, '$comments', '$destination');";
-        // }
-
-        // sql cmd to update review
-        $sql_update_review = "UPDATE reviews
-                                SET first_name = '$firstName', last_name = '$lastName', rating = $rating, comments = '$comments'
-                                WHERE review_id = " . $review_id . ";";
-
         // query SQL cmd
         $results_update_review = $mysqli->query($sql_update_review);
 
@@ -180,7 +171,7 @@
 					</div>	
 				<?php else : ?>
 					<div class="text-success">
-						Review was successfully added.
+						Review was successfully updated.
 					</div>
 				<?php endif; ?>
             </div>
