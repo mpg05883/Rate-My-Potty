@@ -20,6 +20,35 @@
     // save review id from GET
     $review_id = $_GET['review_id'];
 
+    // if there's an upload associated with this review, delete it
+    // get file path
+    $sql_get_filepath = "SELECT filepath
+                        FROM reviews
+                        WHERE filepath IS NOT NULL
+                            AND review_id =" . $review_id . ";";
+
+    $results_get_filepath = $mysqli->query($sql_get_filepath);
+
+    if (!$results_get_filepath) {
+        // print error
+        echo $mysqli->error;
+
+        // close connection to db
+		$mysqli->close();
+
+        // exit program
+		exit();
+    }
+
+    // save filepath
+    $filepath_assoc = $results_get_filepath->fetch_assoc();
+    $filepath =  $filepath_assoc['filepath'];
+
+    // if filepath isn't null, delete the file associated with this review
+    if (!is_null($filepath)) {
+        unlink($filepath);
+    }
+
     // SQL cmd to delete review
     $sql_delete_review = "DELETE FROM reviews
                         WHERE review_id =" . $review_id . ";";

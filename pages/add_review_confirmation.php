@@ -8,13 +8,13 @@
     // echo ("</pre>");
 
     //* ========== error check required data ==========
-    // return true if first name is not set or is empty
+    // check first name
     $firstNameInvalid = !isset($_POST['firstName']) || trim($_POST['firstName']) == '';
 
     // check last name
     $lastNameInvalid = !isset($_POST['lastName']) || trim($_POST['lastName']) == '';
 
-    // if first name, last name, or rating are invalid:
+    // if first name or last name are invalid:
     if ($firstNameInvalid || $lastNameInvalid) {
         $error = "Invalid input. Please submit a first and last name";
 
