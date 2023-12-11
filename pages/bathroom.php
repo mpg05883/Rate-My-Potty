@@ -45,6 +45,19 @@
         }
     }
 
+    // define function to format times
+    function formatTime($time) {
+        // insert ":" at 2nd index:
+        $time[2] = ":";
+
+        // if there's a leading 0, remove it
+        if (substr($time, 0, 1) == '0') {
+            $time = ltrim($time, '0');
+        }
+
+        return $time;
+    }
+
     // require db credentials
     require "../config/config.php";
 
@@ -445,31 +458,59 @@
                         <table class="py-4" id="hours-table">
                             <tr id="monday-row">
                                 <td class="day-of-the-week">Mon</td>
-                                <td class="text-nowrap"><?php echo $mon_open . " - " . $mon_close?></td>
+                                <?php if (!is_null($mon_open) && !is_null($mon_close)) : ?>
+                                    <td class="text-nowrap"><?php echo formatTime($mon_open) . " - " . formatTime($mon_close)?></td>
+                                <?php else : ?>
+                                    <td class="text-nowrap">Closed</td>
+                                <?php endif; ?>
                             </tr>
                             <tr id="tuesday-row">
                                 <td class="day-of-the-week">Tues</td>
-                                <td class="text-nowrap"><?php echo $tues_open . " - " . $tues_close; ?></td>
+                                <?php if (!is_null($tues_open) && !is_null($tues_close)) : ?>
+                                    <td class="text-nowrap"><?php echo formatTime($tues_open) . " - " . formatTime($tues_close)?></td>
+                                <?php else : ?>
+                                    <td class="text-nowrap">Closed</td>
+                                <?php endif; ?>
                             </tr>
                             <tr id="wednesday-row">
                                 <td class="day-of-the-week">Wed</td>
-                                <td class="text-nowrap"><?php echo $wed_open . " - " . $wed_close; ?></td>
+                                <?php if (!is_null($wed_open) && !is_null($wed_close)) : ?>
+                                    <td class="text-nowrap"><?php echo formatTime($wed_open) . " - " . formatTime($wed_close)?></td>
+                                <?php else : ?>
+                                    <td class="text-nowrap">Closed</td>
+                                <?php endif; ?>
                             </tr>
                             <tr id="thursday-row">
                                 <td class="day-of-the-week">Thurs</td>
-                                <td class="text-nowrap"><?php echo $thurs_open . " - " . $thurs_close; ?></td>
+                                <?php if (!is_null($thurs_open) && !is_null($thurs_close)) : ?>
+                                    <td class="text-nowrap"><?php echo formatTime($thurs_open) . " - " . formatTime($thurs_close)?></td>
+                                <?php else : ?>
+                                    <td class="text-nowrap">Closed</td>
+                                <?php endif; ?>
                             </tr>
                             <tr id="friday-row">
                                 <td class="day-of-the-week">Fri</td>
-                                <td class="text-nowrap"><?php echo $fri_open . " - " . $fri_close; ?></td>
+                                <?php if (!is_null($fri_open) && !is_null($fri_close)) : ?>
+                                    <td class="text-nowrap"><?php echo formatTime($fri_open) . " - " . formatTime($fri_close)?></td>
+                                <?php else : ?>
+                                    <td class="text-nowrap">Closed</td>
+                                <?php endif; ?>
                             </tr>
                             <tr id="saturday-row">
                                 <td class="day-of-the-week">Sat</td>
-                                <td class="text-nowrap"><?php echo $sat_open . " - " . $sat_close; ?></td>
+                                <?php if (!is_null($sat_open) && !is_null($sat_close)) : ?>
+                                    <td class="text-nowrap"><?php echo formatTime($sat_open) . " - " . formatTime($sat_close)?></td>
+                                <?php else : ?>
+                                    <td class="text-nowrap">Closed</td>
+                                <?php endif; ?>
                             </tr>
                             <tr id="sunday-row">
                                 <td class="day-of-the-week">Sun</td>
-                                <td class="text-nowrap"><?php echo $sun_open . " - " . $sun_close; ?></td>
+                                <?php if (!is_null($sun_open) && !is_null($sun_close)) : ?>
+                                    <td class="text-nowrap"><?php echo formatTime($sun_open) . " - " . formatTime($sun_close)?></td>
+                                <?php else : ?>
+                                    <td class="text-nowrap">Closed</td>
+                                <?php endif; ?>
                             </tr>
                         </table>
                     </div>
